@@ -16,19 +16,56 @@
         <div class="lcars-text-box lcars-u-1 lcars-hopbush-color text-right">UL: {{ formatSpeed(torrent.rateUpload) }}</div>
       </div>
       <div v-if="torrent.errorString" class="lcars-text-box torrent-error-field lcars-red-alert-color">{{ torrent.errorString }}</div>
+      <!-- Delete Button and Messages -->
+      <div class="lcars-row controls-row">
+        <div class="lcars-text-box lcars-u-1-1">
+          <button @click="handleDeleteTorrent" class="lcars-element button lcars-red-alert-bg">DELETE TORRENT & DATA</button>
+        </div>
+      </div>
+      <div v-if="deleteMessage" class="lcars-text-box lcars-u-1-1 lcars-dodger-blue-bg feedback-message">
+        <p>{{ deleteMessage }}</p>
+      </div>
+      <div v-if="deleteError" class="lcars-text-box lcars-u-1-1 lcars-red-alert-bg feedback-message">
+        <p>{{ deleteError }}</p>
+      </div>
     </div>
-
   </div>
 </template>
 
 <script setup lang="ts">
 import type { Torrent } from '../types/transmission';
-import { computed } from 'vue';
+import { computed, ref } from 'vue';
+import { removeTorrent } from '../services/transmissionService'; // Import the removeTorrent function
 
 const props = defineProps<{
   torrent: Torrent;
 }>();
 
+const deleteMessage = ref<string | null>(null);
+const deleteError = ref<string | null>(null);
+
+// It's often better to emit an event to the parent to refresh the list
+// const emit = defineEmits(['torrentRemoved']); // If we want parent to handle refresh explicitly
+
+async function handleDeleteTorrent() {
+  deleteMessage.value = null;
+  deleteError.value = null;
+  if (!confirm(`Are you sure you want to delete "${props.torrent.name}" and its data?`)) {
+    return;
+  }
+  try {
+    await removeTorrent(props.torrent.id, true); // true to delete local data
+    deleteMessage.value = `Torrent "${props.torrent.name}" deleted successfully.`;
+    // Optionally, emit an event for the parent to refresh the list immediately
+    // emit('torrentRemoved');
+    // Or rely on the polling in TorrentList.vue to update the UI
+    // For immediate feedback, you might want to hide this item or show a success state.
+    // However, since TorrentList polls, it will disappear shortly.
+  } catch (e: any) {
+    console.error(`Failed to delete torrent ${props.torrent.id}:`, e);
+    deleteError.value = e.message || `Failed to delete torrent.`;
+  }
+}
 
 const STATUS_MAP: { [key: number]: string } = {
   0: 'Stopped',
@@ -118,13 +155,30 @@ function formatEta(seconds: number): string {
 .lcars-red-alert-color { color: var(--lcars-red-alert, #e10); }
 .lcars-neon-carrot-bg { background-color: var(--lcars-neon-carrot, #f93); }
 .lcars-red-damask-bg { background-color: var(--lcars-red-damask, #d64); }
+.lcars-dodger-blue-bg { background-color: var(--lcars-dodger-blue, #39f); color: var(--lcars-black, #000); }
+
+
+.controls-row {
+  margin-top: 0.25rem; /* Add some space above the controls row */
+}
 
 /* Ensure buttons and other elements fit well */
 .lcars-element.button {
-  height: 1.5rem; /* Adjust to fit better if needed */
+  height: auto; /* Adjust to fit better if needed */
   width: auto;
-  padding: 0 0.5rem;
+  padding: 0.3rem 0.5rem; /* Consistent padding */
   font-size: 90%;
   margin-top: 0.1rem;
+  line-height: 1.2; /* Ensure text fits well */
+  text-transform: uppercase;
+}
+
+.lcars-element.button.lcars-red-alert-bg {
+  color: var(--lcars-black, #000); /* Black text on red button */
+}
+
+.feedback-message p {
+  margin: 0.1rem 0.25rem; /* Tighter margins for feedback messages */
+  padding: 0.1rem 0.25rem;
 }
 </style>

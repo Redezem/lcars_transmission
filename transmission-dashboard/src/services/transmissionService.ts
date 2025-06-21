@@ -80,3 +80,34 @@ export async function getSession(): Promise<TransmissionSession> {
 }
 
 // Add other methods like torrent-add, torrent-remove, torrent-start, torrent-stop, session-set etc. as needed.
+
+export async function addTorrent(magnetLink: string): Promise<any> { // Consider defining a more specific return type if the API provides one for torrent-add
+  const payload: RequestPayload = {
+    method: 'torrent-add',
+    arguments: {
+      filename: magnetLink,
+    },
+  };
+  const response = await fetchWithSession<any>(payload); // Replace 'any' with a specific type if available
+  if (response.result === 'success') {
+    return response.arguments;
+  } else {
+    throw new Error(`Failed to add torrent: ${response.result}`);
+  }
+}
+
+export async function removeTorrent(id: number, deleteLocalData: boolean): Promise<void> {
+  const payload: RequestPayload = {
+    method: 'torrent-remove',
+    arguments: {
+      ids: [id],
+      'delete-local-data': deleteLocalData,
+    },
+  };
+  const response = await fetchWithSession<void>(payload); // Transmission usually returns an empty success for this
+  if (response.result === 'success') {
+    return;
+  } else {
+    throw new Error(`Failed to remove torrent ${id}: ${response.result}`);
+  }
+}
