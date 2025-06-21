@@ -1,0 +1,14 @@
+version: '3.8'
+services:
+  transmission-dashboard:
+    build: .
+    container_name: transmission_lcars_dashboard
+    # When using network_mode: "host", the container shares the host's network.
+    # Nginx inside the container will listen on port 8080 (as per nginx.conf).
+    # This port 8080 will be directly on the host's network interface.
+    # The 'ports' directive here is more for documentation/awareness in host mode,
+    # as it doesn't establish a typical Docker NAT mapping.
+    ports:
+      - "8080:8080"
+    network_mode: "host"
+    restart: unless-stopped
