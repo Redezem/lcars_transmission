@@ -1,8 +1,8 @@
 <template>
 
-  <div class="torrent-list-item lcars-row lcars-u-1-1 lcars-black-bg">
+  <div class="torrent-list-item lcars-row lcars-black-bg">
     <div class="lcars-column fill">
-      <div class="lcars-text-box lcars-u-1 lcars-golden-tanoi-color header-text">{{ torrent.name }}</div>
+      <div class="lcars-text-box torrent-name-field lcars-golden-tanoi-color header-text">{{ torrent.name }}</div>
       <div class="lcars-row">
         <div class="lcars-text-box lcars-u-2-3 lcars-anakiwa-color">Status: {{ torrentStatus }}</div>
         <div class="lcars-text-box lcars-u-1-3 lcars-anakiwa-color text-right">ETA: {{ formatEta(torrent.eta) }}</div>
@@ -15,13 +15,8 @@
         <div class="lcars-text-box lcars-u-1 lcars-hopbush-color">DL: {{ formatSpeed(torrent.rateDownload) }}</div>
         <div class="lcars-text-box lcars-u-1 lcars-hopbush-color text-right">UL: {{ formatSpeed(torrent.rateUpload) }}</div>
       </div>
-      <div v-if="torrent.errorString" class="lcars-text-box lcars-u-1 lcars-red-alert-color">{{ torrent.errorString }}</div>
+      <div v-if="torrent.errorString" class="lcars-text-box torrent-error-field lcars-red-alert-color">{{ torrent.errorString }}</div>
     </div>
-    <!-- Placeholder for action buttons -->
-    <!-- <div class="lcars-column">
-      <button class="lcars-element button lcars-u-1 lcars-neon-carrot-bg">START</button>
-      <button class="lcars-element button lcars-u-1 lcars-red-damask-bg">STOP</button>
-    </div> -->
 
   </div>
 </template>
@@ -84,7 +79,17 @@ function formatEta(seconds: number): string {
   margin-bottom: 0.5rem; /* Standard LCARS spacing */
   padding: 0.25rem;
   background-color: var(--lcars-black-bg, #000); /* Ensure black background */
-  min-height: 6.25rem; /* lcars-u-1-2 height */
+  /* min-height: 6.25rem; Let height be determined by content or add specific min-height if needed */
+  width: 100%; /* Allow item to take full width of its container */
+}
+
+.torrent-name-field {
+  width: 100%; /* Ensure name field takes full width available in its column */
+  /* The existing .lcars-text-box style below will handle overflow/ellipsis */
+}
+
+.torrent-error-field {
+  width: 100%; /* Ensure error field takes full width */
 }
 
 .lcars-text-box {
