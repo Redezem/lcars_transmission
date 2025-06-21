@@ -1,5 +1,4 @@
 <template>
-
   <div class="torrent-list lcars-column fill">
     <div class="lcars-row">
       <div class="lcars-bar horizontal both-divider bottom">
@@ -7,6 +6,21 @@
       </div>
       <div class="lcars-bar horizontal right-end cap"></div>
     </div>
+
+    <!-- Add Torrent Section -->
+    <div class="lcars-row add-torrent-section">
+      <div class="lcars-text-box lcars-u-1-1">
+        <input type="text" v-model="newMagnetLink" placeholder="Enter magnet link" class="lcars-input"/>
+        <button @click="handleAddTorrent" class="lcars-element button lcars-neon-carrot-bg">ADD TORRENT</button>
+      </div>
+    </div>
+    <div v-if="addTorrentMessage" class="lcars-text-box lcars-u-1-1 lcars-dodger-blue-bg feedback-message">
+      <p>{{ addTorrentMessage }}</p>
+    </div>
+    <div v-if="addTorrentError" class="lcars-text-box lcars-u-1-1 lcars-red-alert-bg feedback-message">
+      <p>{{ addTorrentError }}</p>
+    </div>
+    <!-- End Add Torrent Section -->
 
     <div v-if="error" class="lcars-text-box lcars-u-1-1 lcars-red-alert-bg">
       <p>Error loading torrents: {{ error }}</p>
@@ -21,7 +35,6 @@
 
     <div class="lcars-column fill scrollable-content" v-if="!isLoading && torrents.length > 0">
       <TorrentListItem v-for="torrent in torrents" :key="torrent.id" :torrent="torrent" />
-
     </div>
   </div>
 </template>
@@ -98,47 +111,6 @@ async function handleAddTorrent() {
   }
 }
 </script>
-
-<template>
-  <div class="torrent-list lcars-column fill">
-    <div class="lcars-row">
-      <div class="lcars-bar horizontal both-divider bottom">
-        <div class="lcars-title">TORRENT STATUS</div>
-      </div>
-      <div class="lcars-bar horizontal right-end cap"></div>
-    </div>
-
-    <!-- Add Torrent Section -->
-    <div class="lcars-row add-torrent-section">
-      <div class="lcars-text-box lcars-u-1-1">
-        <input type="text" v-model="newMagnetLink" placeholder="Enter magnet link" class="lcars-input"/>
-        <button @click="handleAddTorrent" class="lcars-element button lcars-neon-carrot-bg">ADD TORRENT</button>
-      </div>
-    </div>
-    <div v-if="addTorrentMessage" class="lcars-text-box lcars-u-1-1 lcars-dodger-blue-bg feedback-message">
-      <p>{{ addTorrentMessage }}</p>
-    </div>
-    <div v-if="addTorrentError" class="lcars-text-box lcars-u-1-1 lcars-red-alert-bg feedback-message">
-      <p>{{ addTorrentError }}</p>
-    </div>
-    <!-- End Add Torrent Section -->
-
-    <div v-if="error" class="lcars-text-box lcars-u-1-1 lcars-red-alert-bg">
-      <p>Error loading torrents: {{ error }}</p>
-    </div>
-    <div v-if="isLoading && !error" class="lcars-text-box lcars-u-1-1 lcars-blue-bell-bg">
-      <p>Loading torrent data...</p>
-    </div>
-
-    <div v-if="!isLoading && !error && torrents.length === 0" class="lcars-text-box lcars-u-1-1 lcars-golden-tanoi-bg">
-      <p>No torrents active or available.</p>
-    </div>
-
-    <div class="lcars-column fill scrollable-content" v-if="!isLoading && torrents.length > 0">
-      <TorrentListItem v-for="torrent in torrents" :key="torrent.id" :torrent="torrent" />
-    </div>
-  </div>
-</template>
 
 <style scoped>
 .torrent-list {
