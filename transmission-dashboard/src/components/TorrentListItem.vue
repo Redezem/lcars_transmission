@@ -96,7 +96,6 @@ function formatEta(seconds: number): string {
   padding: 0.1rem 0.25rem; /* Reduced padding for denser info */
   margin-bottom: 0.1rem; /* Tighter spacing */
   text-transform: uppercase;
-  overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
   height: auto; /* Allow height to adjust to content a bit */

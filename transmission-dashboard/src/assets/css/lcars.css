@@ -384,7 +384,6 @@ body {
   display: flex;
   width: calc(100% - 1rem);
   height: calc(100% - 1rem);
-  overflow: hidden;
   margin: 0.5rem;
 }
 .lcars-app-container #left-menu {
