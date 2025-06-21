@@ -1,4 +1,5 @@
 <template>
+
   <div class="torrent-list lcars-column fill">
     <div class="lcars-row">
       <div class="lcars-bar horizontal both-divider bottom">
@@ -20,12 +21,15 @@
 
     <div class="lcars-column fill scrollable-content" v-if="!isLoading && torrents.length > 0">
       <TorrentListItem v-for="torrent in torrents" :key="torrent.id" :torrent="torrent" />
+
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+
 import { ref, onMounted, onUnmounted } from 'vue';
+
 import type { Torrent } from '../types/transmission';
 import { getTorrents } from '../services/transmissionService';
 import TorrentListItem from './TorrentListItem.vue';
@@ -33,10 +37,12 @@ import TorrentListItem from './TorrentListItem.vue';
 const torrents = ref<Torrent[]>([]);
 const isLoading = ref(true);
 const error = ref<string | null>(null);
+
 let pollInterval: number | undefined;
 
 async function loadTorrents() {
   // isLoading.value = true; // Keep existing list visible while loading
+
   error.value = null;
   try {
     torrents.value = await getTorrents();
@@ -50,6 +56,7 @@ async function loadTorrents() {
 
 onMounted(() => {
   loadTorrents();
+
   pollInterval = setInterval(loadTorrents, 5000); // Refresh every 5 seconds
 });
 
@@ -57,11 +64,13 @@ onUnmounted(() => {
   if (pollInterval) {
     clearInterval(pollInterval);
   }
+
 });
 </script>
 
 <style scoped>
 .torrent-list {
+
   padding: 0.25rem; /* Add some padding around the list itself */
 }
 
@@ -87,5 +96,6 @@ onUnmounted(() => {
   color: #000; /* Black text on colored bars */
   background-color: transparent; /* Title text should not have its own black background here */
   padding-bottom: 0; /* Adjust if needed */
+
 }
 </style>

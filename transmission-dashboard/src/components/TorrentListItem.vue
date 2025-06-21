@@ -1,4 +1,5 @@
 <template>
+
   <div class="torrent-list-item lcars-row lcars-u-1-1 lcars-black-bg">
     <div class="lcars-column fill">
       <div class="lcars-text-box lcars-u-1 lcars-golden-tanoi-color header-text">{{ torrent.name }}</div>
@@ -21,6 +22,7 @@
       <button class="lcars-element button lcars-u-1 lcars-neon-carrot-bg">START</button>
       <button class="lcars-element button lcars-u-1 lcars-red-damask-bg">STOP</button>
     </div> -->
+
   </div>
 </template>
 
@@ -31,6 +33,7 @@ import { computed } from 'vue';
 const props = defineProps<{
   torrent: Torrent;
 }>();
+
 
 const STATUS_MAP: { [key: number]: string } = {
   0: 'Stopped',
@@ -52,6 +55,7 @@ function formatSpeed(bytes: number): string {
   const sizes = ['B/s', 'KB/s', 'MB/s', 'GB/s', 'TB/s'];
   const i = Math.floor(Math.log(bytes) / Math.log(k));
   return parseFloat((bytes / Math.pow(k, i)).toFixed(1)) + ' ' + sizes[i];
+
 }
 
 function formatBytes(bytes: number): string {
